@@ -2,60 +2,147 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Genshin PDA</title>
+    
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Genshin PDA" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             background: #1a1a2e;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Courier New', monospace;
+            overflow: hidden;
+            touch-action: none;
         }
         .pda {
             background: #2d2d44;
-            border-radius: 40px 40px 30px 30px;
-            padding: 20px 20px 30px 20px;
+            border-radius: 30px 30px 25px 25px;
+            padding: 14px 14px 24px 14px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 -4px 8px rgba(0, 0, 0, 0.6), inset 0 4px 8px rgba(255, 255, 255, 0.08);
             border: 2px solid #4a4a6a;
             width: 880px;
+            max-width: 98vw;
+            max-height: 98dvh;
             position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .pwa-install-banner {
+            background: linear-gradient(135deg, #4a2a6a, #2a4a6a);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: clamp(10px, 1.2vw, 13px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #6a4a8a;
+            flex-shrink: 0;
+        }
+        .pwa-install-banner:hover {
+            background: linear-gradient(135deg, #5a3a7a, #3a5a7a);
+            transform: scale(1.02);
+        }
+        .pwa-install-banner .icon {
+            font-size: clamp(16px, 2vw, 22px);
         }
         .pda-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 10px 12px 10px;
+            padding: 0 4px 8px 4px;
             color: #8af0c0;
-            font-size: 14px;
+            font-size: clamp(11px, 1.6vw, 16px);
             font-weight: bold;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(138, 240, 192, 0.3);
+            flex-shrink: 0;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .pda-top .top-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .pda-top .led {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #4f4;
             box-shadow: 0 0 12px #4f4;
             margin-right: 6px;
         }
-        .pda-top .battery {
-            color: #aac;
+        .pda-top .top-stat {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: #1a1a30;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid #3a3a5a;
+        }
+        .pda-top .top-stat span {
+            color: #ffd866;
+        }
+        .pda-top .top-btn {
+            background: #3a3a5a;
+            border: none;
+            border-radius: 12px;
+            color: #ccd;
+            font-weight: bold;
+            padding: 4px 10px;
+            box-shadow: 0 3px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.06s ease;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(10px, 1.4vw, 14px);
+            touch-action: manipulation;
+        }
+        .pda-top .top-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1a1a2e;
+        }
+        .pda-top .top-btn.shop {
+            background: #5a4a7a;
+            color: #f0e0ff;
+            box-shadow: 0 3px 0 #3a2a4a;
+        }
+        .pda-top .top-btn.restart {
+            background: #4a3a5a;
+            color: #f0e0ff;
+            box-shadow: 0 3px 0 #2a1a3a;
         }
         .pda-screen-wrap {
             background: #0d0d1a;
             border-radius: 16px;
-            padding: 10px;
+            padding: 6px;
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 0 0 2px #3a3a5a;
+            flex-shrink: 0;
+            width: 100%;
+            touch-action: none;
         }
         .pda-screen {
             background: #101020;
@@ -76,107 +163,62 @@
         .pda-bottom {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding-top: 16px;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: flex-end;
+            padding-top: 8px;
+            gap: 4px;
+            flex-shrink: 0;
+            width: 100%;
         }
-        .pda-btn {
-            background: #3a3a5a;
+        .pda-controls-left {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .ctrl-btn {
+            background: #4a4a6e;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: #ccd;
-            font-size: 18px;
             font-weight: bold;
-            padding: 8px 18px;
-            box-shadow: 0 4px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.06s ease;
             font-family: 'Courier New', monospace;
-            min-width: 56px;
-            text-align: center;
-        }
-        .pda-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #1a1a2e;
-        }
-        .pda-btn.arrow {
-            background: #4a4a6e;
-            font-size: 22px;
-            padding: 8px 20px;
-            min-width: 60px;
-        }
-        .pda-btn.arrow:active {
-            background: #5a5a8e;
-        }
-        .pda-btn.action {
-            background: #6a4a8a;
-            color: #f0e0ff;
-            box-shadow: 0 4px 0 #3a2a5a, inset 0 2px 4px rgba(255, 255, 255, 0.15);
-        }
-        .pda-btn.action:active {
-            background: #7a5a9a;
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #3a2a5a;
-        }
-        .pda-btn.small {
-            font-size: 14px;
-            padding: 6px 12px;
-            min-width: 40px;
-        }
-        .pda-btn.shop {
-            background: #5a4a7a;
-            color: #f0e0ff;
-            box-shadow: 0 4px 0 #3a2a4a, inset 0 2px 4px rgba(255, 255, 255, 0.1);
-            font-size: 16px;
-        }
-        .pda-btn.shop:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #3a2a4a;
-        }
-        .pda-dpad {
-            display: grid;
-            grid-template-columns: 56px 56px 56px;
-            grid-template-rows: 48px 48px 48px;
-            gap: 4px;
-            background: #22223a;
-            padding: 6px;
-            border-radius: 16px;
-            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
-        }
-        .pda-dpad .pda-btn {
-            border-radius: 10px;
-            padding: 0;
-            min-width: 0;
-            font-size: 20px;
-            box-shadow: 0 3px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.08);
+            touch-action: manipulation;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .pda-dpad .pda-btn:active {
-            transform: translateY(2px);
+        .ctrl-btn:active {
+            transform: translateY(4px);
             box-shadow: 0 1px 0 #1a1a2e;
         }
-        .pda-dpad .empty {
-            visibility: hidden;
-        }
-        .pda-status {
-            color: #8af0c0;
-            font-size: 13px;
-            background: #1a1a30;
-            padding: 6px 14px;
+        .ctrl-btn.arrow {
+            width: clamp(60px, 12vw, 90px);
+            height: clamp(60px, 12vw, 90px);
+            font-size: clamp(28px, 5vw, 44px);
             border-radius: 20px;
-            border: 1px solid #3a3a5a;
+        }
+        .pda-controls-right {
             display: flex;
             align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
         }
-        .pda-status span {
-            color: #ffd866;
+        .ctrl-btn.jump {
+            background: #6a4a8a;
+            color: #f0e0ff;
+            box-shadow: 0 5px 0 #3a2a5a, inset 0 2px 4px rgba(255, 255, 255, 0.15);
+            width: clamp(80px, 16vw, 120px);
+            height: clamp(80px, 16vw, 120px);
+            font-size: clamp(40px, 7vw, 60px);
+            border-radius: 50%;
         }
-
+        .ctrl-btn.jump:active {
+            background: #7a5a9a;
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #3a2a5a;
+        }
         .shop-overlay {
             position: fixed;
             top: 0;
@@ -189,6 +231,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            touch-action: none;
         }
         .shop-overlay.open {
             display: flex;
@@ -196,20 +239,21 @@
         .shop-modal {
             background: #2a2a44;
             border-radius: 32px;
-            padding: 24px 30px;
+            padding: 20px 24px;
             width: 90%;
             max-width: 600px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
             border: 2px solid #5a5a8a;
             color: #ccd;
+            touch-action: auto;
         }
         .shop-modal h2 {
             text-align: center;
             color: #ffd866;
-            font-size: 28px;
-            margin-bottom: 16px;
+            font-size: clamp(22px, 4vw, 28px);
+            margin-bottom: 12px;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(255, 216, 102, 0.2);
         }
@@ -218,9 +262,11 @@
             background: none;
             border: none;
             color: #aac;
-            font-size: 30px;
+            font-size: clamp(24px, 4vw, 30px);
             cursor: pointer;
             transition: 0.2s;
+            touch-action: manipulation;
+            padding: 4px 8px;
         }
         .shop-modal .close-btn:hover {
             color: #fff;
@@ -231,31 +277,35 @@
             justify-content: space-between;
             align-items: center;
             background: #1e1e38;
-            padding: 12px 18px;
+            padding: 10px 14px;
             border-radius: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border-left: 6px solid #6a4a8a;
             transition: 0.2s;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .shop-item:hover {
             background: #2a2a4e;
         }
         .shop-item .info {
             flex: 1;
+            min-width: 80px;
         }
         .shop-item .name {
             font-weight: bold;
-            font-size: 18px;
+            font-size: clamp(14px, 2vw, 18px);
         }
         .shop-item .desc {
-            font-size: 13px;
+            font-size: clamp(10px, 1.2vw, 13px);
             color: #99a;
             margin-top: 2px;
         }
         .shop-item .price {
-            font-size: 16px;
+            font-size: clamp(13px, 1.6vw, 16px);
             color: #ffd866;
-            margin-right: 16px;
+            margin-right: 8px;
+            white-space: nowrap;
         }
         .shop-item .buy-btn {
             background: #4a6a8a;
@@ -263,13 +313,14 @@
             border-radius: 30px;
             color: #fff;
             font-weight: bold;
-            padding: 8px 20px;
+            padding: 6px 14px;
             cursor: pointer;
             box-shadow: 0 3px 0 #1a2a3a;
             transition: 0.06s ease;
             font-family: inherit;
-            font-size: 15px;
-            min-width: 70px;
+            font-size: clamp(12px, 1.4vw, 15px);
+            min-width: clamp(50px, 10vw, 70px);
+            touch-action: manipulation;
         }
         .shop-item .buy-btn:active {
             transform: translateY(3px);
@@ -284,126 +335,199 @@
         .shop-item .bought {
             color: #6f6;
             font-weight: bold;
-            font-size: 16px;
-            margin-right: 16px;
+            font-size: clamp(13px, 1.6vw, 16px);
+            margin-right: 8px;
+            white-space: nowrap;
         }
         .shop-currency {
             text-align: right;
-            font-size: 16px;
+            font-size: clamp(14px, 1.8vw, 16px);
             color: #ffd866;
-            margin-bottom: 16px;
-            padding: 6px 12px;
+            margin-bottom: 12px;
+            padding: 4px 10px;
             background: #1a1a30;
             border-radius: 30px;
             display: inline-block;
         }
-
         @media (max-width: 920px) {
             .pda {
-                width: 96vw;
-                padding: 12px;
-                border-radius: 28px;
+                border-radius: 24px 24px 20px 20px;
+                padding: 10px 10px 16px 10px;
+                max-height: 98vh;
             }
-            .pda-dpad {
-                grid-template-columns: 44px 44px 44px;
-                grid-template-rows: 38px 38px 38px;
-                gap: 3px;
-                padding: 4px;
+            .pda-top {
+                gap: 6px;
             }
-            .pda-btn {
-                font-size: 14px;
-                padding: 6px 12px;
-                min-width: 40px;
+            .ctrl-btn.arrow {
+                width: clamp(50px, 10vw, 80px);
+                height: clamp(50px, 10vw, 80px);
+                font-size: clamp(24px, 4vw, 36px);
             }
-            .pda-status {
-                font-size: 11px;
-                padding: 4px 10px;
+            .ctrl-btn.jump {
+                width: clamp(70px, 14vw, 100px);
+                height: clamp(70px, 14vw, 100px);
+                font-size: clamp(34px, 6vw, 50px);
             }
-            .shop-modal {
-                padding: 16px;
+            .pwa-install-banner {
+                font-size: 8px;
+                padding: 4px 8px;
             }
         }
-        @media (max-width: 540px) {
-            .pda-dpad {
-                grid-template-columns: 36px 36px 36px;
-                grid-template-rows: 32px 32px 32px;
-                gap: 2px;
-                padding: 3px;
+        @media (max-width: 600px) and (orientation: portrait) {
+            .pda {
+                border-radius: 14px;
+                padding: 6px 6px 12px 6px;
+                max-width: 100vw;
+                max-height: 100dvh;
+                height: 100dvh;
+                justify-content: space-between;
             }
-            .pda-btn {
-                font-size: 12px;
-                padding: 4px 8px;
-                min-width: 32px;
-            }
-            .pda-status {
+            .pda-top {
+                padding: 4px 2px 4px 2px;
                 font-size: 10px;
-                padding: 3px 8px;
-                gap: 8px;
+                gap: 4px;
             }
-            .shop-item {
-                flex-wrap: wrap;
-                gap: 8px;
+            .pda-top .top-stat {
+                padding: 2px 4px;
+                font-size: 9px;
             }
-            .shop-item .price {
-                margin-right: 8px;
+            .pda-top .top-btn {
+                padding: 2px 6px;
+                font-size: 8px;
+                border-radius: 8px;
+            }
+            .pda-screen-wrap {
+                padding: 3px;
+                border-radius: 10px;
+            }
+            .pda-screen {
+                border-radius: 6px;
+            }
+            .pda-bottom {
+                padding-top: 4px;
+                gap: 2px;
+            }
+            .ctrl-btn.arrow {
+                width: clamp(55px, 16vw, 80px);
+                height: clamp(55px, 16vw, 80px);
+                font-size: clamp(22px, 5vw, 34px);
+                border-radius: 14px;
+            }
+            .ctrl-btn.jump {
+                width: clamp(70px, 20vw, 100px);
+                height: clamp(70px, 20vw, 100px);
+                font-size: clamp(30px, 7vw, 46px);
+                border-radius: 50%;
+            }
+            .pda-controls-left {
+                gap: 4px;
+            }
+            .pwa-install-banner {
+                font-size: 7px;
+                padding: 2px 6px;
+            }
+            .pwa-install-banner .icon {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 400px) and (orientation: portrait) {
+            .ctrl-btn.arrow {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+            .ctrl-btn.jump {
+                width: 60px;
+                height: 60px;
+                font-size: 26px;
+            }
+            .pda-top .top-stat {
+                font-size: 7px;
+                padding: 1px 4px;
             }
         }
     </style>
 </head>
 <body>
-
-    <div class="pda">
-        <div class="pda-top">
-            <div><span class="led"></span> GENSHIN · PDA</div>
-            <div class="battery">⚡ <span id="scoreDisplay">0</span> pts</div>
+<div class="pda">
+    <div class="pda-top">
+        <div class="top-group">
+            <span class="led"></span> GENSHIN
         </div>
-        <div class="pda-screen-wrap">
-            <div class="pda-screen">
-                <canvas id="gameCanvas" width="800" height="520"></canvas>
+        <div class="top-group">
+            <div class="top-stat">❤️ <span id="livesDisplay">3</span></div>
+            <div class="top-stat">🪙 <span id="coinDisplay">0</span></div>
+            <div class="top-stat">🏁 <span id="levelDisplay">1</span>/36</div>
+            <button class="top-btn shop" id="shopBtn">🛒</button>
+            <button class="top-btn restart" id="restartBtn">↺</button>
+            <div class="pwa-install-banner" id="installBanner" style="display:none;">
+                <span class="icon">📲</span>
+                <span>Установить</span>
             </div>
         </div>
-        <div class="pda-bottom">
-            <div class="pda-dpad">
-                <div class="empty"></div>
-                <div class="empty"></div>
-                <div class="empty"></div>
-                <button class="pda-btn arrow" data-key="ArrowLeft">◀</button>
-                <button class="pda-btn action" data-key="Space">●</button>
-                <button class="pda-btn arrow" data-key="ArrowRight">▶</button>
-                <div class="empty"></div>
-                <div class="empty"></div>
-                <div class="empty"></div>
-            </div>
-            <div class="pda-status">
-                <span>❤️ <span id="livesDisplay">3</span></span>
-                <span>🪙 <span id="coinDisplay">0</span></span>
-                <span>🏁 <span id="levelDisplay">1</span>/9</span>
-                <button class="pda-btn shop" id="shopBtn">🛒 Магазин</button>
-                <button class="pda-btn small" id="restartBtn" style="background:#4a3a5a;box-shadow:0 3px 0 #2a1a3a;">↺</button>
-            </div>
+        <div class="top-group">
+            <span class="battery">⚡ <span id="scoreDisplay">0</span> pts</span>
         </div>
     </div>
-
-    <div class="shop-overlay" id="shopOverlay">
-        <div class="shop-modal">
-            <button class="close-btn" id="shopCloseBtn">✕</button>
-            <h2>🛒 Магазин стихий</h2>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="shop-currency">🪙 <span id="shopCoinDisplay">0</span></div>
-                <div style="font-size:13px; color:#99a;">Купи бафф навсегда!</div>
-            </div>
-            <div id="shopItemsContainer"></div>
+    <div class="pda-screen-wrap">
+        <div class="pda-screen">
+            <canvas id="gameCanvas" width="800" height="520"></canvas>
         </div>
     </div>
+    <div class="pda-bottom">
+        <div class="pda-controls-left">
+            <button class="ctrl-btn arrow" data-key="ArrowLeft">◀</button>
+            <button class="ctrl-btn arrow" data-key="ArrowRight">▶</button>
+        </div>
+        <div class="pda-controls-right">
+            <button class="ctrl-btn jump" data-key="Space">●</button>
+        </div>
+    </div>
+</div>
+<div class="shop-overlay" id="shopOverlay">
+    <div class="shop-modal">
+        <button class="close-btn" id="shopCloseBtn">✕</button>
+        <h2>🛒 Магазин стихий</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="shop-currency">🪙 <span id="shopCoinDisplay">0</span></div>
+            <div style="font-size:13px; color:#99a;">Купи бафф навсегда!</div>
+        </div>
+        <div id="shopItemsContainer"></div>
+    </div>
+</div>
 
-    <script>
-        // ─── Canvas ───
+<script>
+    (function() {
+        // ============ PWA ============
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('installBanner');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'flex';
+        });
+
+        installBanner.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const result = await deferredPrompt.userChoice;
+                if (result.outcome === 'accepted') {
+                    installBanner.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.style.display = 'none';
+            console.log('PWA установлено!');
+        });
+
+        // ============ ИГРА ============
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const W = 800,
-            H = 520;
-
-        // ─── DOM ───
+        const W = 800, H = 520;
         const scoreSpan = document.getElementById('scoreDisplay');
         const livesSpan = document.getElementById('livesDisplay');
         const coinSpan = document.getElementById('coinDisplay');
@@ -415,7 +539,6 @@
         const shopCoinDisplay = document.getElementById('shopCoinDisplay');
         const shopItemsContainer = document.getElementById('shopItemsContainer');
 
-        // ─── Константы (базовые) ───
         const BASE_GRAVITY = 0.55;
         const BASE_FRICTION = 0.82;
         const BASE_MAX_FALL = 12;
@@ -423,18 +546,17 @@
         const BASE_JUMP_FORCE = -10.5;
         const TRAMPOLINE_BOOST = -11.5;
 
-        // ─── Состояние игры ───
         let gameState = 'menu';
         let score = 0;
         let lives = 3;
-        let coinsCollected = 0; // Сохраняется при рестарте
+        let coinsCollected = 0;
         let currentLevel = 0;
         let keys = {};
         let frame = 0;
         let jumpKeyDown = false;
         let jumpKeyProcessed = false;
+        let totalCoinsInLevel = 0;
 
-        // ─── Баффы (Сохраняются при рестарте) ───
         let activeBuffs = {
             pyro: false,
             electro: false,
@@ -447,64 +569,28 @@
         let cryoShield = false;
         let cryoShieldUses = 0;
 
-        // ─── Объекты уровня ───
         let platforms = [];
         let trampolines = [];
         let particles = [];
         let coins = [];
         let goal = null;
+        
+        // Специальные объекты для 36 уровня
+        let keyItem = null;
+        let cage = null;
+        let hasKey = false;
+        let marioFreed = false;
 
-        // ─── Игрок ───
         const player = {
-            x: 60,
-            y: 400,
-            w: 28,
-            h: 38,
-            vx: 0,
-            vy: 0,
-            onGround: false,
-            facing: 1,
-            jumpCount: 0,
-            maxJumps: 1,
-            animFrame: 0,
-            animTimer: 0,
-            invincible: 0,
+            x: 60, y: 400, w: 28, h: 38,
+            vx: 0, vy: 0, onGround: false,
+            facing: 1, jumpCount: 0, maxJumps: 1,
+            animFrame: 0, animTimer: 0, invincible: 0,
         };
 
-        // ─── ВСЕ 9 УРОВНЕЙ (Новый уровень на 1-м месте) ───
-        const LEVELS = [
-            // УРОВЕНЬ 1: Пустыня (Новый уровень по вашему скриншоту)
-            {
-                playerStart: { x: 60, y: 400 },
-                ground: [
-                    { x: 0, y: 490, w: 250 },
-                    { x: 320, y: 490, w: 480 }
-                ],
-                platforms: [
-                    // Деревянные столбики (слева направо)
-                    { x: 60, y: 390, w: 40 },    // Левый столбик (с оранжевым шариком)
-                    { x: 60, y: 340, w: 40 },    // Верхняя часть левого столбика
-                    { x: 120, y: 420, w: 100 },  // Нижняя платформа с зелёным шариком
-                    { x: 250, y: 350, w: 120 },  // Средняя зелёная платформа
-                    { x: 620, y: 380, w: 100 },  // Платформа с красными шариками
-                    { x: 710, y: 250, w: 80 },   // Верхняя платформа с 3 шариками
-                    { x: 750, y: 380, w: 60 }    // Маленькая платформа справа внизу
-                ],
-                trampolines: [],
-                coins: [
-                    [70, 365], // Оранжевый шарик (на столбике)
-                    [160, 390], // Зелёный шарик (на нижней платформе)
-                    [290, 320], // Голубой шарик (на средней зелёной платформе)
-                    [660, 350], // Красный шарик 1 (справа)
-                    [690, 350], // Красный шарик 2 (справа)
-                    [730, 350], // Зелёный шарик (справа)
-                    [730, 210], // Зелёный шарик (верхний левый)
-                    [760, 210], // Голубой шарик (верхний центр)
-                    [790, 210]  // Красный шарик (верхний правый)
-                ],
-                goal: { x: 720, y: 440, w: 40, h: 40 } // Розовый шарик внизу справа = финиш
-            },
-            // Уровень 2: Пустой уровень с островками (был 1-м)
+        // ===== ВСЕ 36 УРОВНЕЙ =====
+        // Оригинальные 8 уровней
+        const ORIGINAL_LEVELS = [
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -518,7 +604,6 @@
                 coins: [],
                 goal: { x: 740, y: 450, w: 40, h: 40 }
             },
-            // Уровень 3: Новый уровень с батутом-лесенкой (был 2-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -544,7 +629,6 @@
                 ],
                 goal: { x: 740, y: 450, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 4: Пирамида (был 3-м) (БАТУТ УБРАН)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -558,7 +642,7 @@
                     { x: 440, y: 320, w: 120 },
                     { x: 80, y: 400, w: 120 }
                 ],
-                trampolines: [], // БАТУТ УДАЛЁН
+                trampolines: [],
                 coins: [
                     [160, 130], [140, 145], [180, 145],
                     [120, 160], [160, 160], [200, 160],
@@ -567,7 +651,6 @@
                 ],
                 goal: { x: 740, y: 450, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 5: Сетка (был 4-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -594,7 +677,6 @@
                 ],
                 goal: { x: 740, y: 450, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 6: Сетка 4x4 (был 5-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -615,7 +697,6 @@
                 ],
                 goal: { x: 740, y: 450, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 7 (Сложный старый, был 6-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -634,7 +715,6 @@
                 ],
                 goal: { x: 740, y: 460, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 8 (Старый длинный, был 7-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -653,7 +733,6 @@
                 ],
                 goal: { x: 740, y: 140, w: 40, h: 40 }
             },
-            // УРОВЕНЬ 9 (Старый первый, был 8-м)
             {
                 playerStart: { x: 60, y: 400 },
                 ground: [
@@ -675,20 +754,482 @@
             }
         ];
 
-        // ─── Загрузка уровня ───
+        // Уровни 9-13 (ранее добавленные)
+        const NEW_LEVELS_1 = [
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 220 },
+                    { x: 300, y: 490, w: 180 },
+                    { x: 560, y: 490, w: 240 }
+                ],
+                platforms: [
+                    { x: 180, y: 410, w: 90 },
+                    { x: 340, y: 340, w: 90 },
+                    { x: 500, y: 410, w: 90 },
+                    { x: 660, y: 340, w: 90 }
+                ],
+                trampolines: [],
+                coins: [
+                    [60, 460], [100, 460], [140, 460],
+                    [200, 380], [240, 380],
+                    [360, 310], [400, 310],
+                    [520, 380], [560, 380],
+                    [680, 310], [720, 310]
+                ],
+                goal: { x: 740, y: 450, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 160 },
+                    { x: 640, y: 490, w: 160 }
+                ],
+                platforms: [
+                    { x: 140, y: 430, w: 80 },
+                    { x: 280, y: 360, w: 80 },
+                    { x: 420, y: 290, w: 80 },
+                    { x: 560, y: 360, w: 80 },
+                    { x: 700, y: 430, w: 80 }
+                ],
+                trampolines: [
+                    { x: 100, y: 474, w: 36, h: 16 },
+                    { x: 380, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [80, 460], [120, 460],
+                    [160, 400], [200, 400],
+                    [300, 330], [340, 330],
+                    [440, 260], [480, 260],
+                    [580, 330], [620, 330],
+                    [720, 400], [740, 400]
+                ],
+                goal: { x: 740, y: 390, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 140 },
+                    { x: 660, y: 490, w: 140 }
+                ],
+                platforms: [
+                    { x: 100, y: 440, w: 70 },
+                    { x: 220, y: 390, w: 70 },
+                    { x: 340, y: 340, w: 70 },
+                    { x: 460, y: 290, w: 70 },
+                    { x: 580, y: 340, w: 70 },
+                    { x: 700, y: 390, w: 70 }
+                ],
+                trampolines: [],
+                coins: [
+                    [50, 460], [90, 460],
+                    [120, 410], [160, 410],
+                    [240, 360], [280, 360],
+                    [360, 310], [400, 310],
+                    [480, 260], [520, 260],
+                    [600, 310], [640, 310],
+                    [720, 360], [740, 360]
+                ],
+                goal: { x: 740, y: 350, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 800 }
+                ],
+                platforms: [
+                    { x: 100, y: 400, w: 90 }, { x: 350, y: 400, w: 90 }, { x: 600, y: 400, w: 90 },
+                    { x: 200, y: 310, w: 90 }, { x: 450, y: 310, w: 90 },
+                    { x: 100, y: 220, w: 90 }, { x: 350, y: 220, w: 90 }, { x: 600, y: 220, w: 90 },
+                    { x: 700, y: 310, w: 70 }
+                ],
+                trampolines: [
+                    { x: 250, y: 474, w: 36, h: 16 },
+                    { x: 500, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [130, 370], [170, 370], [380, 370], [420, 370], [630, 370], [670, 370],
+                    [230, 280], [270, 280], [480, 280], [520, 280],
+                    [130, 190], [170, 190], [380, 190], [420, 190], [630, 190], [670, 190],
+                    [720, 280], [740, 280]
+                ],
+                goal: { x: 740, y: 270, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 180 },
+                    { x: 620, y: 490, w: 180 }
+                ],
+                platforms: [
+                    { x: 150, y: 430, w: 80 },
+                    { x: 290, y: 370, w: 80 },
+                    { x: 430, y: 310, w: 80 },
+                    { x: 570, y: 250, w: 80 },
+                    { x: 710, y: 370, w: 70 },
+                    { x: 570, y: 430, w: 80 }
+                ],
+                trampolines: [
+                    { x: 350, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [70, 460], [110, 460],
+                    [170, 400], [210, 400],
+                    [310, 340], [350, 340],
+                    [450, 280], [490, 280],
+                    [590, 220], [630, 220],
+                    [720, 340], [740, 340],
+                    [590, 400], [630, 400]
+                ],
+                goal: { x: 740, y: 450, w: 40, h: 40 }
+            }
+        ];
+
+        // Уровни 14-18 (ИСПРАВЛЕНЫ)
+        const NEW_LEVELS_2 = [
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 120 },
+                    { x: 680, y: 490, w: 120 }
+                ],
+                platforms: [
+                    { x: 100, y: 440, w: 80 },
+                    { x: 230, y: 380, w: 80 },
+                    { x: 360, y: 320, w: 80 },
+                    { x: 490, y: 380, w: 80 },
+                    { x: 620, y: 440, w: 80 }
+                ],
+                trampolines: [
+                    { x: 160, y: 474, w: 36, h: 16 },
+                    { x: 420, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [40, 460], [80, 460],
+                    [120, 410], [160, 410], [200, 410],
+                    [250, 350], [290, 350],
+                    [380, 290], [420, 290],
+                    [510, 350], [550, 350],
+                    [640, 410], [680, 410],
+                    [720, 460], [740, 460]
+                ],
+                goal: { x: 740, y: 400, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 200 },
+                    { x: 600, y: 490, w: 200 }
+                ],
+                platforms: [
+                    { x: 160, y: 440, w: 70 },
+                    { x: 280, y: 380, w: 70 },
+                    { x: 400, y: 320, w: 70 },
+                    { x: 520, y: 260, w: 70 },
+                    { x: 640, y: 320, w: 70 },
+                    { x: 520, y: 380, w: 70 },
+                    { x: 400, y: 440, w: 70 }
+                ],
+                trampolines: [
+                    { x: 100, y: 474, w: 36, h: 16 },
+                    { x: 460, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [80, 460], [120, 460],
+                    [180, 410], [220, 410],
+                    [300, 350], [340, 350],
+                    [420, 290], [460, 290],
+                    [540, 230], [580, 230],
+                    [660, 290], [700, 290],
+                    [540, 350], [580, 350],
+                    [420, 410], [460, 410]
+                ],
+                goal: { x: 740, y: 450, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 140 },
+                    { x: 660, y: 490, w: 140 }
+                ],
+                platforms: [
+                    { x: 120, y: 430, w: 90 },
+                    { x: 270, y: 370, w: 90 },
+                    { x: 420, y: 310, w: 90 },
+                    { x: 570, y: 370, w: 90 },
+                    { x: 720, y: 430, w: 60 }
+                ],
+                trampolines: [],
+                coins: [
+                    [60, 460], [100, 460],
+                    [140, 400], [180, 400],
+                    [290, 340], [330, 340],
+                    [440, 280], [480, 280],
+                    [590, 340], [630, 340],
+                    [740, 400], [760, 400]
+                ],
+                goal: { x: 740, y: 390, w: 40, h: 40 }
+            },
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 160 },
+                    { x: 640, y: 490, w: 160 }
+                ],
+                platforms: [
+                    { x: 140, y: 440, w: 70 },
+                    { x: 260, y: 390, w: 70 },
+                    { x: 380, y: 340, w: 70 },
+                    { x: 500, y: 390, w: 70 },
+                    { x: 620, y: 440, w: 70 }
+                ],
+                trampolines: [
+                    { x: 200, y: 474, w: 36, h: 16 },
+                    { x: 440, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [80, 460], [120, 460],
+                    [160, 410], [200, 410],
+                    [280, 360], [320, 360],
+                    [400, 310], [440, 310],
+                    [520, 360], [560, 360],
+                    [640, 410], [680, 410],
+                    [720, 460], [740, 460]
+                ],
+                goal: { x: 740, y: 400, w: 40, h: 40 }
+            },
+            // 18 уровень - ИСПРАВЛЕН: убрана лишняя плита
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 800 }
+                ],
+                platforms: [
+                    { x: 100, y: 420, w: 80 }, { x: 280, y: 370, w: 80 }, { x: 460, y: 320, w: 80 }, { x: 640, y: 370, w: 80 },
+                    { x: 100, y: 290, w: 80 }, { x: 280, y: 240, w: 80 }, { x: 640, y: 240, w: 80 }, // Убрана 460, y: 190
+                    { x: 100, y: 160, w: 80 }, { x: 280, y: 110, w: 80 }, { x: 460, y: 160, w: 80 }, { x: 640, y: 110, w: 80 }
+                ],
+                trampolines: [
+                    { x: 180, y: 474, w: 36, h: 16 },
+                    { x: 360, y: 474, w: 36, h: 16 },
+                    { x: 540, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [100, 390], [140, 390], [280, 340], [320, 340], [460, 290], [500, 290], [640, 340], [680, 340],
+                    [100, 260], [140, 260], [280, 210], [320, 210], [460, 160], [500, 160], [640, 210], [680, 210],
+                    [100, 130], [140, 130], [280, 80], [320, 80], [460, 130], [500, 130], [640, 80], [680, 80]
+                ],
+                goal: { x: 740, y: 70, w: 40, h: 40 }
+            }
+        ];
+
+        // Уровни 19-27 (удалены 21-26, оставлены 19,20,27)
+        const NEW_LEVELS_3 = [
+            // 19: Лунный сад
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 160 },
+                    { x: 640, y: 490, w: 160 }
+                ],
+                platforms: [
+                    { x: 130, y: 430, w: 70 },
+                    { x: 250, y: 370, w: 70 },
+                    { x: 370, y: 310, w: 70 },
+                    { x: 490, y: 370, w: 70 },
+                    { x: 610, y: 430, w: 70 }
+                ],
+                trampolines: [
+                    { x: 80, y: 474, w: 36, h: 16 },
+                    { x: 560, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [60, 460], [100, 460],
+                    [150, 400], [190, 400],
+                    [270, 340], [310, 340],
+                    [390, 280], [430, 280],
+                    [510, 340], [550, 340],
+                    [630, 400], [670, 400],
+                    [720, 460], [740, 460]
+                ],
+                goal: { x: 740, y: 390, w: 40, h: 40 }
+            },
+            // 20: Башня ветров
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 140 },
+                    { x: 660, y: 490, w: 140 }
+                ],
+                platforms: [
+                    { x: 110, y: 440, w: 60 },
+                    { x: 220, y: 390, w: 60 },
+                    { x: 330, y: 340, w: 60 },
+                    { x: 440, y: 290, w: 60 },
+                    { x: 550, y: 340, w: 60 },
+                    { x: 660, y: 390, w: 60 }
+                ],
+                trampolines: [
+                    { x: 170, y: 474, w: 36, h: 16 },
+                    { x: 390, y: 474, w: 36, h: 16 },
+                    { x: 610, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [80, 460], [120, 460],
+                    [130, 410], [170, 410],
+                    [240, 360], [280, 360],
+                    [350, 310], [390, 310],
+                    [460, 260], [500, 260],
+                    [570, 310], [610, 310],
+                    [680, 360], [720, 360]
+                ],
+                goal: { x: 740, y: 350, w: 40, h: 40 }
+            },
+            // 27: Зеркальный лабиринт (был 27, теперь 21)
+            {
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 120 },
+                    { x: 680, y: 490, w: 120 }
+                ],
+                platforms: [
+                    { x: 90, y: 440, w: 60 },
+                    { x: 200, y: 390, w: 60 },
+                    { x: 310, y: 340, w: 60 },
+                    { x: 420, y: 290, w: 60 },
+                    { x: 530, y: 340, w: 60 },
+                    { x: 640, y: 390, w: 60 }
+                ],
+                trampolines: [
+                    { x: 140, y: 474, w: 36, h: 16 },
+                    { x: 370, y: 474, w: 36, h: 16 },
+                    { x: 600, y: 474, w: 36, h: 16 }
+                ],
+                coins: [
+                    [60, 460], [100, 460],
+                    [120, 410], [160, 410],
+                    [230, 360], [270, 360],
+                    [340, 310], [380, 310],
+                    [450, 260], [490, 260],
+                    [560, 310], [600, 310],
+                    [670, 360], [710, 360]
+                ],
+                goal: { x: 740, y: 350, w: 40, h: 40 }
+            }
+        ];
+
+        // ===== 28 уровень - ИСПРАВЛЕН: убрана верхняя плита, цель ближе =====
+        const LEVEL_28 = {
+            playerStart: { x: 60, y: 400 },
+            ground: [
+                { x: 0, y: 490, w: 800 }
+            ],
+            platforms: [
+                { x: 80, y: 420, w: 70 }, { x: 230, y: 370, w: 70 }, { x: 380, y: 320, w: 70 }, { x: 530, y: 370, w: 70 }, { x: 680, y: 420, w: 70 },
+                { x: 155, y: 270, w: 70 }, { x: 305, y: 220, w: 70 }, { x: 455, y: 270, w: 70 }, { x: 605, y: 220, w: 70 },
+                { x: 230, y: 140, w: 70 }, { x: 380, y: 90, w: 70 }, { x: 530, y: 140, w: 70 },
+                // Убрана самая верхняя плита { x: 305, y: 60, w: 70 }, { x: 455, y: 60, w: 70 }, { x: 380, y: 30, w: 70 }
+            ],
+            trampolines: [
+                { x: 140, y: 474, w: 36, h: 16 },
+                { x: 290, y: 474, w: 36, h: 16 },
+                { x: 440, y: 474, w: 36, h: 16 },
+                { x: 590, y: 474, w: 36, h: 16 }
+            ],
+            coins: [
+                [80, 390], [120, 390], [230, 340], [270, 340], [380, 290], [420, 290], [530, 340], [570, 340], [680, 390], [720, 390],
+                [155, 240], [195, 240], [305, 190], [345, 190], [455, 240], [495, 240], [605, 190], [645, 190],
+                [230, 110], [270, 110], [380, 60], [420, 60], [530, 110], [570, 110]
+                // Убраны монеты с верхней плиты
+            ],
+            goal: { x: 700, y: 140, w: 40, h: 40 } // Цель поставлена ближе
+        };
+
+        // Уровни 29-36 (простые для заполнения)
+        const NEW_LEVELS_4 = [];
+        for (let i = 29; i <= 35; i++) {
+            const offset = (i - 29) * 30;
+            NEW_LEVELS_4.push({
+                playerStart: { x: 60, y: 400 },
+                ground: [
+                    { x: 0, y: 490, w: 140 + (i % 3) * 20 },
+                    { x: 660 - (i % 3) * 20, y: 490, w: 140 + (i % 3) * 20 }
+                ],
+                platforms: [
+                    { x: 120 + offset % 500, y: 440 - (i % 3) * 10, w: 70 },
+                    { x: 240 + (offset + 60) % 500, y: 390 - (i % 2) * 10, w: 70 },
+                    { x: 360 + (offset + 120) % 500, y: 340 - (i % 3) * 10, w: 70 },
+                    { x: 480 + (offset + 180) % 500, y: 390 - (i % 2) * 10, w: 70 },
+                    { x: 600 + (offset + 240) % 500, y: 440 - (i % 3) * 10, w: 70 }
+                ],
+                trampolines: i % 2 === 0 ? [
+                    { x: 180 + offset % 400, y: 474, w: 36, h: 16 },
+                    { x: 420 + (offset + 100) % 400, y: 474, w: 36, h: 16 }
+                ] : [],
+                coins: [
+                    [100 + offset % 500, 460 - (i % 2) * 10],
+                    [200 + (offset + 50) % 500, 460 - (i % 2) * 10],
+                    [300 + (offset + 100) % 500, 460 - (i % 2) * 10],
+                    [400 + (offset + 150) % 500, 460 - (i % 2) * 10],
+                    [500 + (offset + 200) % 500, 460 - (i % 2) * 10],
+                    [600 + (offset + 250) % 500, 460 - (i % 2) * 10]
+                ],
+                goal: { x: 740, y: 400 - (i % 2) * 20, w: 40, h: 40 }
+            });
+        }
+
+        // ===== 36 УРОВЕНЬ: КЛЮЧ И КЛЕТКА С МАРИО =====
+        const LEVEL_36 = {
+            playerStart: { x: 60, y: 400 },
+            ground: [
+                { x: 0, y: 490, w: 200 },
+                { x: 600, y: 490, w: 200 }
+            ],
+            platforms: [
+                { x: 180, y: 440, w: 70 },
+                { x: 300, y: 390, w: 70 },
+                { x: 420, y: 340, w: 70 },
+                { x: 540, y: 390, w: 70 },
+                { x: 660, y: 440, w: 70 },
+                { x: 280, y: 240, w: 60 },
+                { x: 440, y: 240, w: 60 }
+            ],
+            trampolines: [
+                { x: 140, y: 474, w: 36, h: 16 },
+                { x: 380, y: 474, w: 36, h: 16 },
+                { x: 620, y: 474, w: 36, h: 16 }
+            ],
+            coins: [
+                [100, 460], [140, 460],
+                [200, 410], [240, 410],
+                [320, 360], [360, 360],
+                [440, 310], [480, 310],
+                [560, 360], [600, 360],
+                [680, 410], [720, 410]
+            ],
+            key: { x: 300, y: 220, w: 20, h: 20, collected: false },
+            cage: { x: 540, y: 140, w: 100, h: 100, open: false },
+            goal: { x: 740, y: 100, w: 40, h: 40 }
+        };
+
+        const LEVELS = [...ORIGINAL_LEVELS, ...NEW_LEVELS_1, ...NEW_LEVELS_2, ...NEW_LEVELS_3, LEVEL_28, ...NEW_LEVELS_4, LEVEL_36];
+
         function loadLevel(index) {
             jumpKeyDown = false;
             jumpKeyProcessed = false;
-
             platforms = [];
             trampolines = [];
             coins = [];
             particles = [];
             goal = null;
-
+            keyItem = null;
+            cage = null;
+            hasKey = false;
+            marioFreed = false;
+            
             const data = LEVELS[index];
             if (!data) return;
-
+            
             for (const g of data.ground) {
                 platforms.push({ x: g.x, y: g.y, w: g.w, h: 40, type: 'ground' });
             }
@@ -701,13 +1242,33 @@
                     triggered: false, cooldown: 0, bounceForce: TRAMPOLINE_BOOST
                 });
             }
+            totalCoinsInLevel = data.coins.length;
             for (const [cx, cy] of data.coins) {
                 coins.push({ x: cx, y: cy, r: 10, collected: false });
             }
+            
+            if (data.key) {
+                keyItem = {
+                    x: data.key.x,
+                    y: data.key.y,
+                    w: data.key.w,
+                    h: data.key.h,
+                    collected: false
+                };
+            }
+            if (data.cage) {
+                cage = {
+                    x: data.cage.x,
+                    y: data.cage.y,
+                    w: data.cage.w,
+                    h: data.cage.h,
+                    open: false
+                };
+            }
+            
             goal = {
-                x: data.goal.x, y: data.goal.y, w: data.goal.w, h: data.goal.h, active: true
+                x: data.goal.x, y: data.goal.y, w: data.goal.w, h: data.goal.h, active: false
             };
-
             player.x = data.playerStart.x;
             player.y = data.playerStart.y;
             player.vx = 0;
@@ -716,18 +1277,15 @@
             player.jumpCount = 0;
             player.invincible = 0;
             player.facing = 1;
-
             applyBuffsToPlayer();
             particles = [];
             levelSpan.textContent = (index + 1) + '/' + LEVELS.length;
         }
 
-        // ─── Применить баффы ───
         function applyBuffsToPlayer() {
             player.maxJumps = activeBuffs.electro ? 2 : 1;
         }
 
-        // ─── Магазин ───
         const shopItems = [
             { id: 'pyro', name: '🔥 Пиро', price: 50, desc: 'Скорость +20%', effect: () => { if (!activeBuffs.pyro) { activeBuffs.pyro = true; speedMultiplier = 1.2; } } },
             { id: 'electro', name: '⚡ Электро', price: 150, desc: 'Двойной прыжок в воздухе', effect: () => { if (!activeBuffs.electro) { activeBuffs.electro = true; applyBuffsToPlayer(); } } },
@@ -782,7 +1340,6 @@
         shopCloseBtn.addEventListener('click', closeShop);
         shopOverlay.addEventListener('click', (e) => { if (e.target === shopOverlay) closeShop(); });
 
-        // ─── Запуск, Рестарт и Уровни ───
         function startGame() {
             gameState = 'playing';
             loadLevel(0);
@@ -790,13 +1347,11 @@
         }
 
         function restartGame() {
-            // Всё сбрасывается, кроме монет и баффов
             lives = 3;
             score = 0;
             currentLevel = 0;
             gameState = 'playing';
             jumpKeyDown = false; jumpKeyProcessed = false; keys = {};
-            
             loadLevel(currentLevel);
             updateUI();
             closeShop();
@@ -810,12 +1365,13 @@
                 updateUI();
             } else {
                 gameState = 'win';
-                spawnParticles(goal.x + goal.w / 2, goal.y + goal.h / 2, '#ffd700', 60);
-                spawnParticles(goal.x + goal.w / 2, goal.y + goal.h / 2, '#ff6b6b', 50);
+                if (goal) {
+                    spawnParticles(goal.x + goal.w / 2, goal.y + goal.h / 2, '#ffd700', 60);
+                    spawnParticles(goal.x + goal.w / 2, goal.y + goal.h / 2, '#ff6b6b', 50);
+                }
             }
         }
 
-        // ─── Вспомогательные функции ───
         function rectCollide(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
         function dist(x1, y1, x2, y2) { return Math.hypot(x2 - x1, y2 - y1); }
 
@@ -835,16 +1391,13 @@
             }
         }
 
-        // ─── Обновление ───
         function update() {
             if (gameState === 'menu') return;
             if (gameState === 'gameover' || gameState === 'win') { updateParticles(); return; }
             frame++;
-
             let moveX = 0;
             if (keys['ArrowLeft'] || keys['KeyA']) moveX = -1;
             if (keys['ArrowRight'] || keys['KeyD']) moveX = 1;
-
             if (jumpKeyDown && !jumpKeyProcessed) {
                 const canJump = player.onGround || (activeBuffs.electro && player.jumpCount < player.maxJumps);
                 if (canJump) {
@@ -855,30 +1408,23 @@
                     jumpKeyProcessed = true;
                 }
             }
-
             const currentSpeed = BASE_PLAYER_SPEED * speedMultiplier;
             player.vx += moveX * 0.8 * speedMultiplier;
             player.vx *= BASE_FRICTION;
             if (Math.abs(player.vx) > currentSpeed) player.vx = currentSpeed * Math.sign(player.vx);
             if (Math.abs(player.vx) < 0.05) player.vx = 0;
-
             player.vy += BASE_GRAVITY;
             if (player.vy > BASE_MAX_FALL) player.vy = BASE_MAX_FALL;
-
             if (Math.abs(player.vx) > 0.5) {
                 player.animTimer++;
                 if (player.animTimer > 6) { player.animTimer = 0; player.animFrame = (player.animFrame + 1) % 4; }
                 player.facing = Math.sign(player.vx) || player.facing;
             } else { player.animFrame = 0; player.animTimer = 0; }
-
             player.x += player.vx;
             if (player.x < 0) player.x = 0;
             if (player.x + player.w > W) player.x = W - player.w;
-
             player.y += player.vy;
             player.onGround = false;
-
-            // ИСПРАВЛЕННАЯ КОЛЛИЗИЯ: отталкивание от стен, а не засасывание
             for (const p of platforms) {
                 if (rectCollide(player, p)) {
                     if (player.vy > 0 && player.y + player.h - player.vy <= p.y + 2) {
@@ -894,7 +1440,6 @@
                     }
                 }
             }
-
             for (const t of trampolines) {
                 if (t.cooldown > 0) t.cooldown--;
                 if (rectCollide(player, t) && player.vy > 0 && t.cooldown === 0 && !t.triggered) {
@@ -904,10 +1449,30 @@
                     t.cooldown = 20;
                     spawnParticles(t.x + t.w / 2, t.y, '#66ffaa', 16);
                 }
-                // Сброс флага в конце кадра
                 if (t.triggered && t.cooldown > 0) t.triggered = false;
             }
-
+            
+            if (keyItem && !keyItem.collected) {
+                const keyRect = { x: keyItem.x, y: keyItem.y, w: keyItem.w, h: keyItem.h };
+                if (rectCollide(player, keyRect)) {
+                    keyItem.collected = true;
+                    hasKey = true;
+                    spawnParticles(keyItem.x + keyItem.w/2, keyItem.y + keyItem.h/2, '#ffd700', 30);
+                }
+            }
+            
+            if (cage && !cage.open && hasKey) {
+                const cageRect = { x: cage.x, y: cage.y, w: cage.w, h: cage.h };
+                if (rectCollide(player, cageRect)) {
+                    cage.open = true;
+                    marioFreed = true;
+                    spawnParticles(cage.x + cage.w/2, cage.y + cage.h/2, '#ff6b6b', 50);
+                    spawnParticles(cage.x + cage.w/2, cage.y + cage.h/2, '#ffd700', 50);
+                    score += 1000;
+                    updateUI();
+                }
+            }
+            
             for (const coin of coins) {
                 if (coin.collected) continue;
                 const d = dist(player.x + player.w / 2, player.y + player.h / 2, coin.x, coin.y);
@@ -920,12 +1485,22 @@
                     updateUI();
                 }
             }
-
+            
+            const allCoinsCollected = coins.every(c => c.collected);
+            let canActivateGoal = allCoinsCollected;
+            
+            if (cage) {
+                canActivateGoal = allCoinsCollected && cage.open;
+            }
+            
+            if (goal && !goal.active && canActivateGoal) {
+                goal.active = true;
+                spawnParticles(goal.x + goal.w / 2, goal.y + goal.h / 2, '#ffd700', 20);
+            }
             if (goal && goal.active && rectCollide(player, goal)) {
                 goal.active = false;
                 nextLevel();
             }
-
             if (player.y > H + 50) {
                 if (cryoShield && cryoShieldUses > 0) {
                     let nearest = null; let minDist = Infinity;
@@ -943,28 +1518,18 @@
                         player.onGround = true; player.jumpCount = 0;
                         cryoShieldUses--;
                     } else { 
-                        // Если щит не сработал (нет платформ) — теряем жизнь
                         lives--; 
                         updateUI(); 
-                        if (lives <= 0) { 
-                            gameState = 'gameover'; 
-                            currentLevel = 0; // СБРАСЫВАЕМ УРОВЕНЬ ПРИ СМЕРТИ
-                        } else { 
-                            loadLevel(currentLevel); 
-                        }
+                        if (lives <= 0) { gameState = 'gameover'; currentLevel = 0; } 
+                        else { loadLevel(currentLevel); }
                     }
                 } else {
                     lives--; 
                     updateUI(); 
-                    if (lives <= 0) { 
-                        gameState = 'gameover'; 
-                        currentLevel = 0; // СБРАСЫВАЕМ УРОВЕНЬ ПРИ СМЕРТИ
-                    } else { 
-                        loadLevel(currentLevel); 
-                    }
+                    if (lives <= 0) { gameState = 'gameover'; currentLevel = 0; } 
+                    else { loadLevel(currentLevel); }
                 }
             }
-
             if (player.invincible > 0) player.invincible--;
             updateParticles();
             updateUI();
@@ -979,10 +1544,8 @@
             scoreSpan.textContent = score; livesSpan.textContent = lives; coinSpan.textContent = coinsCollected;
         }
 
-        // ─── Отрисовка ───
         function draw() {
             ctx.clearRect(0, 0, W, H);
-
             if (gameState === 'menu') {
                 const grad = ctx.createLinearGradient(0, 0, 0, H);
                 grad.addColorStop(0, '#0b0b2a'); grad.addColorStop(0.5, '#162044'); grad.addColorStop(1, '#1a2a3a');
@@ -1001,18 +1564,15 @@
                 ctx.fillText('СТАРТ', btnX, btnY + 6); ctx.shadowBlur = 0;
                 return;
             }
-
             const grad = ctx.createLinearGradient(0, 0, 0, H);
             grad.addColorStop(0, '#0b0b2a'); grad.addColorStop(0.5, '#162044'); grad.addColorStop(1, '#1a2a3a');
             ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
-
             ctx.fillStyle = 'rgba(255,255,255,0.3)';
             for (let i = 0; i < 40; i++) {
                 const sx = (i * 137 + i * i * 7) % W;
                 const sy = (i * 89 + i * i * 13) % (H * 0.6);
                 ctx.beginPath(); ctx.arc(sx, sy, 0.5 + (i % 3) * 0.5, 0, Math.PI * 2); ctx.fill();
             }
-
             for (const p of platforms) {
                 if (p.type === 'ground') {
                     const grd = ctx.createLinearGradient(0, p.y, 0, p.y + p.h);
@@ -1026,7 +1586,6 @@
                     ctx.fillRect(p.x, p.y, p.w, p.h); ctx.shadowBlur = 0;
                 }
             }
-
             for (const t of trampolines) {
                 ctx.fillStyle = '#666';
                 for (let i = 0; i < 3; i++) ctx.fillRect(t.x + 6 + i * 12, t.y + 4, 3, 8);
@@ -1036,7 +1595,6 @@
                 ctx.fillStyle = grd; ctx.shadowColor = 'rgba(255,100,50,0.4)'; ctx.shadowBlur = 16;
                 ctx.fillRect(t.x, t.y - bounce, t.w, t.h + bounce); ctx.shadowBlur = 0;
             }
-
             for (const coin of coins) {
                 if (coin.collected) continue;
                 const pulse = 1 + Math.sin(frame * 0.06 + coin.x) * 0.08;
@@ -1046,37 +1604,125 @@
                 grd.addColorStop(0, '#ffd700'); grd.addColorStop(0.7, '#ffb300'); grd.addColorStop(1, '#cc8800');
                 ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(coin.x, coin.y, r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
             }
-
-            if (goal && goal.active) {
-                const pulse = 1 + Math.sin(frame * 0.04) * 0.05;
-                const gw = goal.w * pulse, gh = goal.h * pulse;
-                const gx = goal.x + (goal.w - gw) / 2, gy = goal.y + (goal.h - gh) / 2;
-                ctx.fillStyle = '#2a2a4a'; ctx.fillRect(goal.x + 16, goal.y - 12, 4, 52);
-                const flagGrad = ctx.createLinearGradient(gx, gy, gx + gw, gy);
-                flagGrad.addColorStop(0, '#ff6b6b'); flagGrad.addColorStop(0.5, '#ffd93d'); flagGrad.addColorStop(1, '#6bcb77');
-                ctx.fillStyle = flagGrad; ctx.shadowColor = 'rgba(255,200,100,0.3)'; ctx.shadowBlur = 20;
-                ctx.beginPath(); ctx.moveTo(gx + 4, gy + 4); ctx.lineTo(gx + gw - 4, gy + gh / 2); ctx.lineTo(gx + 4, gy + gh - 4); ctx.closePath(); ctx.fill();
-                ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '18px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('★', gx + gw / 2, gy + gh / 2 + 1);
+            
+            if (keyItem && !keyItem.collected) {
+                ctx.shadowColor = 'rgba(255,215,0,0.8)'; ctx.shadowBlur = 20;
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(keyItem.x + 8, keyItem.y, 4, 20);
+                ctx.beginPath();
+                ctx.arc(keyItem.x + 10, keyItem.y + 22, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ff6b00';
+                ctx.beginPath();
+                ctx.arc(keyItem.x + 10, keyItem.y + 22, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
             }
-
+            
+            if (cage) {
+                ctx.strokeStyle = cage.open ? '#4f4' : '#ff6b6b';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = cage.open ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)';
+                ctx.shadowBlur = 15;
+                ctx.strokeRect(cage.x, cage.y, cage.w, cage.h);
+                for (let i = 0; i < cage.w; i += 15) {
+                    ctx.beginPath();
+                    ctx.moveTo(cage.x + i, cage.y);
+                    ctx.lineTo(cage.x + i, cage.y + cage.h);
+                    ctx.stroke();
+                }
+                for (let i = 0; i < cage.h; i += 15) {
+                    ctx.beginPath();
+                    ctx.moveTo(cage.x, cage.y + i);
+                    ctx.lineTo(cage.x + cage.w, cage.y + i);
+                    ctx.stroke();
+                }
+                ctx.shadowBlur = 0;
+                
+                if (!cage.open) {
+                    ctx.font = '50px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillText('🍄', cage.x + cage.w/2, cage.y + cage.h/2 + 5);
+                    ctx.font = '20px sans-serif';
+                    ctx.fillStyle = '#ff6b6b';
+                    ctx.fillText('🔒', cage.x + cage.w/2, cage.y - 15);
+                } else {
+                    ctx.font = '60px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillText('⭐', cage.x + cage.w/2, cage.y + cage.h/2 + 5);
+                    ctx.font = '16px sans-serif';
+                    ctx.fillStyle = '#4f4';
+                    ctx.fillText('✅ СВОБОДЕН!', cage.x + cage.w/2, cage.y - 15);
+                    
+                    const marioX = cage.x + cage.w/2 + Math.sin(frame * 0.03) * 60;
+                    const marioY = cage.y + cage.h/2 + Math.cos(frame * 0.02) * 30;
+                    ctx.font = '40px sans-serif';
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillText('🍄', marioX, marioY);
+                }
+            }
+            
+            if (goal) {
+                if (goal.active) {
+                    const pulse = 1 + Math.sin(frame * 0.04) * 0.05;
+                    const gw = goal.w * pulse, gh = goal.h * pulse;
+                    const gx = goal.x + (goal.w - gw) / 2, gy = goal.y + (goal.h - gh) / 2;
+                    ctx.fillStyle = '#2a2a4a'; ctx.fillRect(goal.x + 16, goal.y - 12, 4, 52);
+                    const flagGrad = ctx.createLinearGradient(gx, gy, gx + gw, gy);
+                    flagGrad.addColorStop(0, '#ff6b6b'); flagGrad.addColorStop(0.5, '#ffd93d'); flagGrad.addColorStop(1, '#6bcb77');
+                    ctx.fillStyle = flagGrad; ctx.shadowColor = 'rgba(255,200,100,0.3)'; ctx.shadowBlur = 20;
+                    ctx.beginPath(); ctx.moveTo(gx + 4, gy + 4); ctx.lineTo(gx + gw - 4, gy + gh / 2); ctx.lineTo(gx + 4, gy + gh - 4); ctx.closePath(); ctx.fill();
+                    ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '18px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('★', gx + gw / 2, gy + gh / 2 + 1);
+                    
+                    if (cage && cage.open) {
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = '14px monospace';
+                        ctx.fillText('🎉 СПАСИ МАРИО! +1000', gx + gw / 2, gy - 25);
+                    }
+                } else {
+                    ctx.globalAlpha = 0.4;
+                    ctx.fillStyle = '#2a2a4a'; ctx.fillRect(goal.x + 16, goal.y - 12, 4, 52);
+                    ctx.fillStyle = '#666'; ctx.shadowColor = 'rgba(100,100,100,0.3)'; ctx.shadowBlur = 10;
+                    ctx.beginPath(); ctx.moveTo(goal.x + 4, goal.y + 4); ctx.lineTo(goal.x + goal.w - 4, goal.y + goal.h / 2); ctx.lineTo(goal.x + 4, goal.y + goal.h - 4); ctx.closePath(); ctx.fill();
+                    ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '14px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    const collectedCount = coins.filter(c => c.collected).length;
+                    let statusText = `${collectedCount}/${totalCoinsInLevel}`;
+                    if (cage) {
+                        statusText += cage.open ? ' ✅' : ' 🔑';
+                    }
+                    ctx.fillText(statusText, goal.x + goal.w / 2, goal.y + goal.h / 2 + 1);
+                    ctx.globalAlpha = 1;
+                }
+            }
             drawPlayer();
             for (const p of particles) {
                 const alpha = p.life / p.maxLife;
                 ctx.globalAlpha = alpha; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
             }
-
             if (gameState === 'gameover') {
                 ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, 0, W, H);
                 ctx.fillStyle = '#ff6b6b'; ctx.font = 'bold 48px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.shadowColor = 'rgba(255,0,0,0.3)'; ctx.shadowBlur = 30; ctx.fillText('💔 GAME OVER', W / 2, H / 2 - 20);
                 ctx.shadowBlur = 0; ctx.fillStyle = '#ccd'; ctx.font = '20px monospace'; ctx.fillText('Нажмите ↺', W / 2, H / 2 + 50);
             }
-
             if (gameState === 'win') {
                 ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, H);
                 ctx.fillStyle = '#ffd700'; ctx.font = 'bold 48px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(255,215,0,0.5)'; ctx.shadowBlur = 40; ctx.fillText('🏆 ВСЕ УРОВНИ ПРОЙДЕНЫ!', W / 2, H / 2 - 20);
-                ctx.shadowBlur = 0; ctx.fillStyle = '#ccd'; ctx.font = '20px monospace'; ctx.fillText(`Счёт: ${score}  •  Нажмите ↺`, W / 2, H / 2 + 50);
+                ctx.shadowColor = 'rgba(255,215,0,0.5)'; ctx.shadowBlur = 40;
+                if (marioFreed) {
+                    ctx.fillText('🏆 МАРИО СПАСЁН! 🎉', W / 2, H / 2 - 30);
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = '#ff6b6b'; ctx.font = '36px monospace';
+                    ctx.fillText('🍄 ВСЕ УРОВНИ ПРОЙДЕНЫ!', W / 2, H / 2 + 30);
+                } else {
+                    ctx.fillText('🏆 ВСЕ УРОВНИ ПРОЙДЕНЫ!', W / 2, H / 2 - 20);
+                }
+                ctx.shadowBlur = 0; ctx.fillStyle = '#ccd'; ctx.font = '20px monospace'; 
+                ctx.fillText(`Счёт: ${score}  •  Нажмите ↺`, W / 2, H / 2 + 80);
             }
         }
 
@@ -1086,26 +1732,21 @@
             ctx.save(); ctx.translate(px + p.w / 2, py + p.h);
             if (p.facing < 0) ctx.scale(-1, 1);
             const s = 1; ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 4;
-
             const bodyGrad = ctx.createLinearGradient(0, -32 * s, 0, -6 * s);
             bodyGrad.addColorStop(0, '#f5e6d0'); bodyGrad.addColorStop(0.2, '#f0dcc4'); bodyGrad.addColorStop(1, '#e8c8a8');
             ctx.fillStyle = bodyGrad; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
             ctx.beginPath(); ctx.roundRect(-10 * s, -28 * s, 20 * s, 22 * s, 4 * s); ctx.fill();
-
             ctx.shadowBlur = 4; ctx.shadowOffsetY = 1;
             const dressGrad = ctx.createLinearGradient(0, -14 * s, 0, -4 * s);
             dressGrad.addColorStop(0, '#d4e8f0'); dressGrad.addColorStop(0.5, '#c0d8e8'); dressGrad.addColorStop(1, '#a8c8d8');
             ctx.fillStyle = dressGrad;
             ctx.beginPath(); ctx.moveTo(-12 * s, -12 * s); ctx.quadraticCurveTo(-16 * s, -6 * s, -12 * s, -2 * s);
             ctx.lineTo(12 * s, -2 * s); ctx.quadraticCurveTo(16 * s, -6 * s, 12 * s, -12 * s); ctx.closePath(); ctx.fill();
-
             ctx.fillStyle = '#c8a060'; ctx.fillRect(-10 * s, -14 * s, 20 * s, 3 * s);
-
             ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
             const headGrad = ctx.createRadialGradient(-2 * s, -36 * s, 2 * s, 0, -32 * s, 12 * s);
             headGrad.addColorStop(0, '#f5e6d0'); headGrad.addColorStop(0.7, '#f0dcc4'); headGrad.addColorStop(1, '#e0c8b0');
             ctx.fillStyle = headGrad; ctx.beginPath(); ctx.arc(0, -32 * s, 11 * s, 0, Math.PI * 2); ctx.fill();
-
             ctx.shadowBlur = 2; ctx.shadowOffsetY = 0; ctx.fillStyle = '#f5d080';
             ctx.beginPath(); ctx.ellipse(0, -36 * s, 13 * s, 10 * s, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#edc060';
@@ -1115,7 +1756,6 @@
             ctx.fillStyle = '#e8b850'; ctx.fillRect(-14 * s, -34 * s, 3 * s, 10 * s); ctx.fillRect(11 * s, -34 * s, 3 * s, 10 * s);
             ctx.beginPath(); ctx.moveTo(8 * s, -32 * s); ctx.quadraticCurveTo(14 * s, -30 * s, 12 * s, -24 * s);
             ctx.quadraticCurveTo(10 * s, -20 * s, 6 * s, -22 * s); ctx.quadraticCurveTo(8 * s, -26 * s, 6 * s, -30 * s); ctx.closePath(); ctx.fill();
-
             ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.fillRect(-7 * s, -35 * s, 5 * s, 5 * s); ctx.fillRect(2 * s, -35 * s, 5 * s, 5 * s);
             const eyeGrad = ctx.createRadialGradient(-5 * s, -33 * s, 1 * s, -5 * s, -33 * s, 3 * s);
             eyeGrad.addColorStop(0, '#ffd700'); eyeGrad.addColorStop(0.6, '#d4a800'); eyeGrad.addColorStop(1, '#8a6a00');
@@ -1123,17 +1763,13 @@
             ctx.beginPath(); ctx.arc(4 * s, -33 * s, 2.5 * s, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.arc(-4 * s, -34 * s, 1 * s, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(5 * s, -34 * s, 1 * s, 0, Math.PI * 2); ctx.fill();
-
             ctx.strokeStyle = '#c08070'; ctx.lineWidth = 1.5 * s; ctx.beginPath(); ctx.arc(0, -29 * s, 3 * s, 0.1, Math.PI - 0.1); ctx.stroke();
-
             ctx.fillStyle = '#ff6b9d'; ctx.shadowBlur = 4; ctx.shadowColor = 'rgba(255,100,150,0.3)';
             for (let i = 0; i < 5; i++) { const angle = i / 5 * Math.PI * 2 + frame * 0.02; const fx = 10 * s + Math.cos(angle) * 4 * s; const fy = -38 * s + Math.sin(angle) * 4 * s; ctx.beginPath(); ctx.arc(fx, fy, 2.5 * s, 0, Math.PI * 2); ctx.fill(); }
             ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(10 * s, -38 * s, 2 * s, 0, Math.PI * 2); ctx.fill();
-
             ctx.shadowBlur = 2; ctx.shadowOffsetY = 1; ctx.fillStyle = '#f0dcc4'; ctx.fillRect(-13 * s, -26 * s, 4 * s, 10 * s); ctx.fillRect(9 * s, -26 * s, 4 * s, 10 * s);
             ctx.fillStyle = '#d4b8a0'; ctx.shadowBlur = 2; ctx.shadowOffsetY = 1; ctx.fillRect(-8 * s, -4 * s, 6 * s, 6 * s); ctx.fillRect(2 * s, -4 * s, 6 * s, 6 * s);
             ctx.fillStyle = '#8a6a4a'; ctx.fillRect(-8 * s, -2 * s, 6 * s, 2 * s); ctx.fillRect(2 * s, -2 * s, 6 * s, 2 * s);
-
             ctx.restore(); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
         }
 
@@ -1195,11 +1831,9 @@
         });
 
         restartBtn.addEventListener('click', () => { 
-            // Кнопка перезапуска: Сбрасываем всё, кроме монет и баффов
             if (gameState === 'menu') return;
             restartGame(); 
         });
-        
         restartBtn.addEventListener('touchstart', (e) => { 
             e.preventDefault(); 
             if (gameState === 'menu') return;
@@ -1230,15 +1864,24 @@
             }
         }, { passive: false });
 
+        // Инициализация
         gameLoop();
 
         function resizeCanvas() {
-            const wrap = canvas.parentElement; const rect = wrap.getBoundingClientRect();
-            const ratio = 800 / 520; let w = rect.width; let h = w / ratio;
+            const wrap = canvas.parentElement; 
+            const rect = wrap.getBoundingClientRect();
+            const ratio = 800 / 520; 
+            let w = rect.width; 
+            let h = w / ratio;
             if (h > rect.height) { h = rect.height; w = h * ratio; }
-            canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
         }
-        window.addEventListener('resize', resizeCanvas); setTimeout(resizeCanvas, 50);
-    </script>
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => { setTimeout(resizeCanvas, 200); });
+        setTimeout(resizeCanvas, 50);
+    })();
+</script>
+
 </body>
 </html>
