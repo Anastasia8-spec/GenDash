@@ -21,88 +21,95 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-        body {
+        html, body {
             background: #1a1a2e;
-            min-height: 100vh;
-            min-height: 100dvh;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: none;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Courier New', monospace;
-            overflow: hidden;
-            touch-action: none;
         }
         .pda {
             background: #2d2d44;
             border-radius: 30px 30px 25px 25px;
-            padding: 14px 14px 24px 14px;
+            padding: 12px 12px 18px 12px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 -4px 8px rgba(0, 0, 0, 0.6), inset 0 4px 8px rgba(255, 255, 255, 0.08);
             border: 2px solid #4a4a6a;
-            width: 880px;
-            max-width: 98vw;
-            max-height: 98dvh;
-            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            position: relative;
         }
         .pwa-install-banner {
             background: linear-gradient(135deg, #4a2a6a, #2a4a6a);
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: clamp(10px, 1.2vw, 13px);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: clamp(8px, 1.2vw, 12px);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             transition: 0.3s;
             border: 1px solid #6a4a8a;
             flex-shrink: 0;
+            white-space: nowrap;
         }
         .pwa-install-banner:hover {
             background: linear-gradient(135deg, #5a3a7a, #3a5a7a);
             transform: scale(1.02);
         }
         .pwa-install-banner .icon {
-            font-size: clamp(16px, 2vw, 22px);
+            font-size: clamp(12px, 1.5vw, 18px);
         }
         .pda-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 4px 8px 4px;
+            padding: 0 2px 6px 2px;
             color: #8af0c0;
-            font-size: clamp(11px, 1.6vw, 16px);
+            font-size: clamp(9px, 1.4vw, 14px);
             font-weight: bold;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(138, 240, 192, 0.3);
             flex-shrink: 0;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 4px;
+            flex-wrap: nowrap;
+            min-height: 28px;
         }
         .pda-top .top-group {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 4px;
+            flex-wrap: nowrap;
         }
         .pda-top .led {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #4f4;
-            box-shadow: 0 0 12px #4f4;
-            margin-right: 6px;
+            box-shadow: 0 0 10px #4f4;
+            margin-right: 4px;
+            flex-shrink: 0;
         }
         .pda-top .top-stat {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             background: #1a1a30;
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 1px 6px;
+            border-radius: 10px;
             border: 1px solid #3a3a5a;
+            flex-shrink: 0;
+            font-size: clamp(8px, 1vw, 12px);
         }
         .pda-top .top-stat span {
             color: #ffd866;
@@ -110,16 +117,18 @@
         .pda-top .top-btn {
             background: #3a3a5a;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #ccd;
             font-weight: bold;
-            padding: 4px 10px;
+            padding: 2px 8px;
             box-shadow: 0 3px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.06s ease;
             font-family: 'Courier New', monospace;
-            font-size: clamp(10px, 1.4vw, 14px);
+            font-size: clamp(8px, 1.2vw, 12px);
             touch-action: manipulation;
+            flex-shrink: 0;
+            line-height: 1.4;
         }
         .pda-top .top-btn:active {
             transform: translateY(3px);
@@ -139,16 +148,17 @@
             background: #2a4a6a;
             color: #f0e0ff;
             box-shadow: 0 3px 0 #1a2a4a;
-            font-size: clamp(14px, 1.8vw, 18px);
+            font-size: clamp(12px, 1.5vw, 16px);
+            padding: 2px 6px;
         }
         .buff-badge {
             display: inline-block;
-            font-size: clamp(8px, 1vw, 12px);
-            padding: 1px 6px;
-            border-radius: 10px;
-            margin-left: 2px;
+            font-size: clamp(7px, 0.8vw, 10px);
+            padding: 1px 4px;
+            border-radius: 8px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
         }
         .buff-badge.active {
             background: rgba(255,215,0,0.2);
@@ -156,19 +166,22 @@
         }
         .pda-screen-wrap {
             background: #0d0d1a;
-            border-radius: 16px;
-            padding: 6px;
+            border-radius: 12px;
+            padding: 4px;
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 0 0 2px #3a3a5a;
-            flex-shrink: 0;
+            flex-shrink: 1;
             width: 100%;
             touch-action: none;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .pda-screen {
             background: #101020;
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             position: relative;
             width: 100%;
+            height: 100%;
             aspect-ratio: 800 / 520;
         }
         #gameCanvas {
@@ -183,15 +196,17 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            padding-top: 8px;
+            padding-top: 6px;
             gap: 4px;
             flex-shrink: 0;
             width: 100%;
+            min-height: 60px;
         }
         .pda-controls-left {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
+            flex: 1;
         }
         .ctrl-btn {
             background: #4a4a6e;
@@ -199,7 +214,7 @@
             border-radius: 14px;
             color: #ccd;
             font-weight: bold;
-            box-shadow: 0 5px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 0 #1a1a2e, inset 0 2px 4px rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.06s ease;
             font-family: 'Courier New', monospace;
@@ -207,30 +222,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
         .ctrl-btn:active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #1a1a2e;
         }
         .ctrl-btn.arrow {
-            width: clamp(60px, 12vw, 90px);
-            height: clamp(60px, 12vw, 90px);
-            font-size: clamp(28px, 5vw, 44px);
-            border-radius: 20px;
+            width: clamp(50px, 10vw, 80px);
+            height: clamp(50px, 10vw, 80px);
+            font-size: clamp(24px, 4vw, 36px);
+            border-radius: 16px;
         }
         .pda-controls-right {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 8px;
+            gap: 6px;
+            flex: 1;
         }
         .ctrl-btn.jump {
             background: #6a4a8a;
             color: #f0e0ff;
-            box-shadow: 0 5px 0 #3a2a5a, inset 0 2px 4px rgba(255, 255, 255, 0.15);
-            width: clamp(80px, 16vw, 120px);
-            height: clamp(80px, 16vw, 120px);
-            font-size: clamp(40px, 7vw, 60px);
+            box-shadow: 0 4px 0 #3a2a5a, inset 0 2px 4px rgba(255, 255, 255, 0.15);
+            width: clamp(60px, 12vw, 100px);
+            height: clamp(60px, 12vw, 100px);
+            font-size: clamp(32px, 5vw, 48px);
             border-radius: 50%;
         }
         .ctrl-btn.jump:active {
@@ -271,7 +288,7 @@
         .shop-modal h2 {
             text-align: center;
             color: #ffd866;
-            font-size: clamp(22px, 4vw, 28px);
+            font-size: clamp(20px, 3.5vw, 28px);
             margin-bottom: 12px;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(255, 216, 102, 0.2);
@@ -281,7 +298,7 @@
             background: none;
             border: none;
             color: #aac;
-            font-size: clamp(24px, 4vw, 30px);
+            font-size: clamp(22px, 3.5vw, 30px);
             cursor: pointer;
             transition: 0.2s;
             touch-action: manipulation;
@@ -296,12 +313,12 @@
             justify-content: space-between;
             align-items: center;
             background: #1e1e38;
-            padding: 10px 14px;
-            border-radius: 16px;
-            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 14px;
+            margin-bottom: 8px;
             border-left: 6px solid #6a4a8a;
             transition: 0.2s;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
         .shop-item:hover {
@@ -309,36 +326,36 @@
         }
         .shop-item .info {
             flex: 1;
-            min-width: 80px;
+            min-width: 60px;
         }
         .shop-item .name {
             font-weight: bold;
-            font-size: clamp(14px, 2vw, 18px);
+            font-size: clamp(12px, 1.6vw, 16px);
         }
         .shop-item .desc {
-            font-size: clamp(10px, 1.2vw, 13px);
+            font-size: clamp(9px, 1vw, 12px);
             color: #99a;
             margin-top: 2px;
         }
         .shop-item .price {
-            font-size: clamp(13px, 1.6vw, 16px);
+            font-size: clamp(11px, 1.4vw, 15px);
             color: #ffd866;
-            margin-right: 8px;
+            margin-right: 6px;
             white-space: nowrap;
         }
         .shop-item .buy-btn {
             background: #4a6a8a;
             border: none;
-            border-radius: 30px;
+            border-radius: 24px;
             color: #fff;
             font-weight: bold;
-            padding: 6px 14px;
+            padding: 5px 12px;
             cursor: pointer;
             box-shadow: 0 3px 0 #1a2a3a;
             transition: 0.06s ease;
             font-family: inherit;
-            font-size: clamp(12px, 1.4vw, 15px);
-            min-width: clamp(50px, 10vw, 70px);
+            font-size: clamp(10px, 1.2vw, 14px);
+            min-width: clamp(45px, 8vw, 65px);
             touch-action: manipulation;
         }
         .shop-item .buy-btn:active {
@@ -354,22 +371,197 @@
         .shop-item .bought {
             color: #6f6;
             font-weight: bold;
-            font-size: clamp(13px, 1.6vw, 16px);
+            font-size: clamp(11px, 1.4vw, 15px);
             white-space: nowrap;
         }
         .shop-currency {
             text-align: right;
-            font-size: clamp(14px, 1.8vw, 16px);
+            font-size: clamp(12px, 1.6vw, 16px);
             color: #ffd866;
-            margin-bottom: 12px;
-            padding: 4px 10px;
+            margin-bottom: 10px;
+            padding: 3px 10px;
             background: #1a1a30;
-            border-radius: 30px;
+            border-radius: 24px;
             display: inline-block;
         }
+
+        /* Специальные стили для горизонтальной ориентации на телефонах */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .pda {
+                border-radius: 16px 16px 12px 12px;
+                padding: 8px 10px 12px 10px;
+                max-width: 100vw;
+                max-height: 100vh;
+                height: 100vh;
+                border-width: 1px;
+            }
+            .pda-top {
+                font-size: clamp(8px, 1.2vw, 11px);
+                padding: 0 2px 4px 2px;
+                min-height: 22px;
+            }
+            .pda-top .top-stat {
+                padding: 1px 4px;
+                font-size: clamp(7px, 0.9vw, 10px);
+                border-radius: 8px;
+            }
+            .pda-top .top-btn {
+                padding: 2px 6px;
+                font-size: clamp(7px, 0.9vw, 10px);
+                border-radius: 8px;
+            }
+            .pda-top .top-btn.fullscreen {
+                font-size: clamp(10px, 1.2vw, 14px);
+                padding: 2px 5px;
+            }
+            .pda-screen-wrap {
+                padding: 3px;
+                border-radius: 8px;
+            }
+            .pda-screen {
+                border-radius: 6px;
+            }
+            .pda-bottom {
+                padding-top: 4px;
+                min-height: 44px;
+            }
+            .ctrl-btn.arrow {
+                width: clamp(40px, 8vw, 60px);
+                height: clamp(40px, 8vw, 60px);
+                font-size: clamp(18px, 3vw, 28px);
+                border-radius: 12px;
+            }
+            .ctrl-btn.jump {
+                width: clamp(50px, 10vw, 80px);
+                height: clamp(50px, 10vw, 80px);
+                font-size: clamp(26px, 4vw, 38px);
+                border-radius: 50%;
+            }
+            .pda-controls-left {
+                gap: 4px;
+            }
+            .pda-controls-right {
+                gap: 4px;
+            }
+            .pwa-install-banner {
+                font-size: 6px;
+                padding: 2px 6px;
+                border-radius: 10px;
+            }
+            .pwa-install-banner .icon {
+                font-size: 10px;
+            }
+            .buff-badge {
+                font-size: clamp(6px, 0.7vw, 9px);
+                padding: 1px 3px;
+            }
+        }
+
+        @media (max-width: 480px) and (orientation: landscape) {
+            .ctrl-btn.arrow {
+                width: clamp(32px, 7vw, 50px);
+                height: clamp(32px, 7vw, 50px);
+                font-size: clamp(14px, 2.5vw, 22px);
+                border-radius: 10px;
+            }
+            .ctrl-btn.jump {
+                width: clamp(40px, 9vw, 65px);
+                height: clamp(40px, 9vw, 65px);
+                font-size: clamp(20px, 3.5vw, 32px);
+            }
+            .pda-top .top-stat {
+                font-size: clamp(6px, 0.8vw, 8px);
+                padding: 1px 3px;
+            }
+            .pda-top .top-btn {
+                font-size: clamp(6px, 0.8vw, 8px);
+                padding: 1px 4px;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .pda {
+                border-radius: 14px;
+                padding: 6px 6px 10px 6px;
+                max-width: 100vw;
+                max-height: 100dvh;
+                height: 100dvh;
+                justify-content: space-between;
+            }
+            .pda-top {
+                font-size: clamp(8px, 1.8vw, 12px);
+                padding: 2px 2px 4px 2px;
+                gap: 3px;
+                min-height: 20px;
+            }
+            .pda-top .top-stat {
+                padding: 1px 4px;
+                font-size: clamp(7px, 1.5vw, 10px);
+            }
+            .pda-top .top-btn {
+                padding: 2px 5px;
+                font-size: clamp(7px, 1.5vw, 10px);
+                border-radius: 6px;
+            }
+            .pda-screen-wrap {
+                padding: 3px;
+                border-radius: 8px;
+            }
+            .pda-screen {
+                border-radius: 4px;
+            }
+            .pda-bottom {
+                padding-top: 4px;
+                min-height: 50px;
+            }
+            .ctrl-btn.arrow {
+                width: clamp(45px, 14vw, 70px);
+                height: clamp(45px, 14vw, 70px);
+                font-size: clamp(18px, 4vw, 30px);
+                border-radius: 12px;
+            }
+            .ctrl-btn.jump {
+                width: clamp(55px, 17vw, 85px);
+                height: clamp(55px, 17vw, 85px);
+                font-size: clamp(24px, 5vw, 40px);
+                border-radius: 50%;
+            }
+            .pda-controls-left {
+                gap: 4px;
+            }
+            .pda-controls-right {
+                gap: 4px;
+            }
+            .pwa-install-banner {
+                font-size: 6px;
+                padding: 2px 5px;
+            }
+            .pwa-install-banner .icon {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 400px) and (orientation: portrait) {
+            .ctrl-btn.arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .ctrl-btn.jump {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .pda-top .top-stat {
+                font-size: 6px;
+                padding: 1px 3px;
+            }
+        }
+
+        /* Fullscreen mode */
         .pda.fullscreen {
             border-radius: 0;
-            padding: 8px 8px 12px 8px;
+            padding: 4px 6px 8px 6px;
             max-width: 100vw;
             max-height: 100vh;
             width: 100vw;
@@ -381,108 +573,9 @@
             background: #6a4a3a;
             box-shadow: 0 3px 0 #3a2a1a;
         }
-        @media (max-width: 920px) {
-            .pda {
-                border-radius: 24px 24px 20px 20px;
-                padding: 10px 10px 16px 10px;
-                max-height: 98vh;
-            }
-            .pda-top {
-                gap: 6px;
-            }
-            .ctrl-btn.arrow {
-                width: clamp(50px, 10vw, 80px);
-                height: clamp(50px, 10vw, 80px);
-                font-size: clamp(24px, 4vw, 36px);
-            }
-            .ctrl-btn.jump {
-                width: clamp(70px, 14vw, 100px);
-                height: clamp(70px, 14vw, 100px);
-                font-size: clamp(34px, 6vw, 50px);
-            }
-            .pwa-install-banner {
-                font-size: 8px;
-                padding: 4px 8px;
-            }
-        }
-        @media (max-width: 600px) and (orientation: portrait) {
-            .pda {
-                border-radius: 14px;
-                padding: 6px 6px 12px 6px;
-                max-width: 100vw;
-                max-height: 100dvh;
-                height: 100dvh;
-                justify-content: space-between;
-            }
-            .pda-top {
-                padding: 4px 2px 4px 2px;
-                font-size: 10px;
-                gap: 4px;
-            }
-            .pda-top .top-stat {
-                padding: 2px 4px;
-                font-size: 9px;
-            }
-            .pda-top .top-btn {
-                padding: 2px 6px;
-                font-size: 8px;
-                border-radius: 8px;
-            }
-            .pda-screen-wrap {
-                padding: 3px;
-                border-radius: 10px;
-            }
-            .pda-screen {
-                border-radius: 6px;
-            }
-            .pda-bottom {
-                padding-top: 4px;
-                gap: 2px;
-            }
-            .ctrl-btn.arrow {
-                width: clamp(55px, 16vw, 80px);
-                height: clamp(55px, 16vw, 80px);
-                font-size: clamp(22px, 5vw, 34px);
-                border-radius: 14px;
-            }
-            .ctrl-btn.jump {
-                width: clamp(70px, 20vw, 100px);
-                height: clamp(70px, 20vw, 100px);
-                font-size: clamp(30px, 7vw, 46px);
-                border-radius: 50%;
-            }
-            .pda-controls-left {
-                gap: 4px;
-            }
-            .pwa-install-banner {
-                font-size: 7px;
-                padding: 2px 6px;
-            }
-            .pwa-install-banner .icon {
-                font-size: 12px;
-            }
+        @media (max-width: 768px) and (orientation: landscape) {
             .pda.fullscreen {
-                padding: 4px 4px 8px 4px;
-            }
-            .pda.fullscreen .pda-top .top-btn.fullscreen {
-                font-size: 10px;
-                padding: 2px 6px;
-            }
-        }
-        @media (max-width: 400px) and (orientation: portrait) {
-            .ctrl-btn.arrow {
-                width: 48px;
-                height: 48px;
-                font-size: 18px;
-            }
-            .ctrl-btn.jump {
-                width: 60px;
-                height: 60px;
-                font-size: 26px;
-            }
-            .pda-top .top-stat {
-                font-size: 7px;
-                padding: 1px 4px;
+                padding: 4px 6px 6px 6px;
             }
         }
     </style>
@@ -497,7 +590,7 @@
             <div class="top-stat">❤️ <span id="livesDisplay">3</span></div>
             <div class="top-stat">🪙 <span id="coinDisplay">0</span></div>
             <div class="top-stat">🏁 <span id="levelDisplay">1</span>/20</div>
-            <div class="top-stat" id="buffDisplay" style="font-size:clamp(8px,1vw,11px);">✨</div>
+            <div class="buff-badge" id="buffDisplay">✨</div>
             <button class="top-btn shop" id="shopBtn">🛒</button>
             <button class="top-btn restart" id="restartBtn">↺</button>
             <button class="top-btn fullscreen" id="fullscreenBtn">⛶</button>
@@ -507,7 +600,7 @@
             </div>
         </div>
         <div class="top-group">
-            <span class="battery">⚡ <span id="scoreDisplay">0</span> pts</span>
+            <span>⚡ <span id="scoreDisplay">0</span></span>
         </div>
     </div>
     <div class="pda-screen-wrap">
@@ -531,7 +624,7 @@
         <h2>🛒 Магазин стихий</h2>
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="shop-currency">🪙 <span id="shopCoinDisplay">0</span></div>
-            <div style="font-size:13px; color:#99a;">Купи бафф навсегда!</div>
+            <div style="font-size:12px; color:#99a;">Купи бафф навсегда!</div>
         </div>
         <div id="shopItemsContainer"></div>
     </div>
@@ -684,7 +777,7 @@
             animFrame: 0, animTimer: 0, invincible: 0,
         };
 
-        // ===== ВСЕ 20 УРОВНЕЙ (21-25 УДАЛЕНЫ) =====
+        // ===== ВСЕ 20 УРОВНЕЙ =====
         const ORIGINAL_LEVELS = [
             {
                 playerStart: { x: 60, y: 400 },
@@ -1133,7 +1226,6 @@
             }
         ];
 
-        // Уровни 19-20 (это были 19-20, теперь просто финальные)
         const NEW_LEVELS_3 = [
             {
                 playerStart: { x: 60, y: 400 },
@@ -1197,7 +1289,6 @@
             }
         ];
 
-        // ВСЕГО 20 УРОВНЕЙ: 8 + 5 + 5 + 2 = 20
         const LEVELS = [...ORIGINAL_LEVELS, ...NEW_LEVELS_1, ...NEW_LEVELS_2, ...NEW_LEVELS_3];
 
         function loadLevel(index) {
@@ -1355,7 +1446,6 @@
             currentLevel = 0;
             gameState = 'playing';
             jumpKeyDown = false; jumpKeyProcessed = false; keys = {};
-            // Сброс баффов
             Object.keys(activeBuffs).forEach(k => activeBuffs[k] = false);
             speedMultiplier = 1; jumpForceMultiplier = 1; cryoShield = false; cryoShieldUses = 0;
             loadLevel(currentLevel);
@@ -1881,7 +1971,6 @@
             }
         }, { passive: false });
 
-        // Инициализация
         gameLoop();
 
         function resizeCanvas() {
