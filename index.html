@@ -371,7 +371,7 @@
             box-shadow: 0 3px 0 #1a2a4a;
         }
 
-        /* ===== ТЕЛЕФОН: исправлено отображение экрана ===== */
+        /* ===== ТЕЛЕФОН: исправлено расположение управления ===== */
         .pda.phone-mode {
             padding: 6px;
             border-radius: 0;
@@ -421,14 +421,16 @@
             flex: 0 0 auto;
             width: 100%;
             padding-top: 4px;
-            justify-content: center;
-            gap: 12px;
+            justify-content: space-between; /* ← стрелки слева, прыжок справа */
+            gap: 4px;
         }
         .pda.phone-mode .pda-bottom .pda-controls-left {
             gap: 12px;
+            justify-content: flex-start;
         }
         .pda.phone-mode .pda-bottom .pda-controls-right {
             gap: 12px;
+            justify-content: flex-end;
         }
         .pda.phone-mode .pda-bottom .ctrl-btn.arrow {
             width: clamp(65px, 14vw, 100px);
@@ -467,7 +469,6 @@
             display: none !important;
         }
 
-        /* Магазин */
         .shop-overlay {
             position: fixed;
             top: 0;
@@ -591,7 +592,7 @@
             display: inline-block;
         }
 
-        /* Адаптив для телефонов с узким экраном */
+        /* Адаптив для узких телефонов */
         @media (max-width: 700px) and (orientation: portrait) {
             .pda.phone-mode {
                 flex-direction: row !important;
@@ -626,7 +627,7 @@
                 font-size: 26px !important;
             }
             .pda.phone-mode .pda-bottom {
-                gap: 6px !important;
+                gap: 4px !important;
             }
             .pda.phone-mode .pda-bottom .pda-controls-left {
                 gap: 6px !important;
@@ -819,15 +820,17 @@
                     phoneSidebar.style.display = 'flex';
                     pdaTop.style.display = 'none';
                     syncSidebarStats();
-                    pdaBottom.style.justifyContent = 'center';
-                    pdaBottom.style.gap = '16px';
+                    // Убедимся, что управление разнесено по краям
+                    pdaBottom.style.justifyContent = 'space-between';
+                    pdaBottom.style.gap = '4px';
                     pdaBottom.querySelector('.pda-controls-left').style.display = 'flex';
                     pdaBottom.querySelector('.pda-controls-right').style.display = 'flex';
+                    pdaBottom.querySelector('.pda-controls-left').style.justifyContent = 'flex-start';
+                    pdaBottom.querySelector('.pda-controls-right').style.justifyContent = 'flex-end';
                     if (installBanner) installBanner.style.display = 'none';
                     document.querySelectorAll('.pda.phone-mode .ctrl-btn').forEach(b => {
                         b.style.touchAction = 'manipulation';
                     });
-                    // Убедимся, что canvas перерисовывается
                     resizeCanvas();
                 } else {
                     pdaTop.style.display = 'flex';
@@ -836,6 +839,8 @@
                     pdaBottom.style.gap = '4px';
                     pdaBottom.querySelector('.pda-controls-left').style.display = 'flex';
                     pdaBottom.querySelector('.pda-controls-right').style.display = 'flex';
+                    pdaBottom.querySelector('.pda-controls-left').style.justifyContent = 'flex-start';
+                    pdaBottom.querySelector('.pda-controls-right').style.justifyContent = 'flex-end';
 
                     document.querySelectorAll('#pdaTop .top-btn, #pdaTop .top-stat, #pdaTop .pwa-install-banner')
                         .forEach(el => { el.style.display = ''; });
@@ -2400,7 +2405,6 @@
                     w = h * ratio; }
                 canvas.style.width = w + 'px';
                 canvas.style.height = h + 'px';
-                // Принудительно перерисовываем
                 draw();
             }
             window.addEventListener('resize', resizeCanvas);
